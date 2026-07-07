@@ -1,0 +1,6 @@
+disnake
+pillow
+pynacl
+python-dotenv
+requests
+rich
