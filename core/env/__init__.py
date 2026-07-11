@@ -7,3 +7,4 @@ dotenv.load_dotenv(os.getenv('DOTENV_FILE', '.env'))
 
 class Env(ABC):
     token = os.getenv('TOKEN')
+    api_key = os.getenv('API_KEY')
