@@ -1,5 +1,5 @@
 from disnake import ApplicationCommandInteraction, Message, User
-from disnake.ext.commands import Bot, Cog, Context, Param, UserConverter, UserNotFound, group, slash_command, user_command
+from disnake.ext.commands import Bot, Cog, Context, Param, UserConverter, UserNotFound, group, message_command, slash_command, user_command
 from disnake.ext.commands.context import AnyContext
 from .commands import command_info
 from typing import Optional
@@ -40,6 +40,14 @@ class Information(Cog):
         subject = await self.bot.fetch_user(user.id)
         await command_info(self.bot, inter, subject)
 
+    @message_command(name='Information about user')
+    async def message_command_info(self, inter: ApplicationCommandInteraction, message: Message):
+        '''Information about user'''
+        await inter.response.defer()
+
+        subject = await self.bot.fetch_user(message.author.id)
+        await command_info(self.bot, inter, subject)
+
     @slash_command_info.sub_command(name='user')
     async def slash_command_info_user(
         self, inter: ApplicationCommandInteraction,
@@ -57,6 +65,7 @@ class Information(Cog):
 
     @command_info_user.error  # type: ignore[reportArgumentType]
     @user_command_info.error  # type: ignore[reportArgumentType]
+    @message_command_info.error  # type: ignore[reportArgumentType]
     @slash_command_info_user.error  # type: ignore[reportArgumentType]
     async def handler_info_user(self, ctx: AnyContext, error: Exception):
         if isinstance(error, UserNotFound):
