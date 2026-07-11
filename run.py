@@ -1,14 +1,12 @@
 from bot import Renmei
 from core.logging import setup_logging
-from dotenv import load_dotenv
-import os
+from core.env import Env
 
 
 def main():
     setup_logging()
-    load_dotenv(os.getenv('DOTENV_FILE', '.env'))
     client = Renmei()
-    client.run(token=os.getenv('TOKEN'))
+    client.run(token=Env.token)
 
 
 if __name__ == '__main__':

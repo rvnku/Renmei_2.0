@@ -2,7 +2,7 @@ from disnake import Guild, Member
 from disnake.ext.commands import Bot, Cog, GuildNotFound
 from disnake.utils import get
 from core.utils import get_primary_color
-from core.env import Env
+from core.config import Conf
 import re
 
 
@@ -49,6 +49,6 @@ class ColorRoles(Cog):
 
 
 def setup(bot: Bot):
-    if not isinstance(guild := bot.get_guild(Env.guild_id), Guild):
-        raise GuildNotFound(str(Env.guild_id))
+    if not isinstance(guild := bot.get_guild(Conf.guild_id), Guild):
+        raise GuildNotFound(str(Conf.guild_id))
     bot.add_cog(ColorRoles(guild))

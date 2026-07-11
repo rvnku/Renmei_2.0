@@ -1,7 +1,7 @@
 from disnake import Member, Message
 from typing import Callable
 from functools import wraps
-from core.env import Env
+from core.config import Conf
 from .templater import replace
 import json, re
 
@@ -42,8 +42,8 @@ def roleplay_action(func: Callable):
       first argument is ``self`` and the second is a :class:`disnake.Message`.
     - If the message has no content, the decorator returns immediately without
       calling ``func``.
-    - If the author does not have either :attr:`core.env.Env.male_role_id` or
-      :attr:`core.env.Env.female_role_id`, the message is ignored.
+    - If the author does not have either :attr:`core.config.Conf.male_role_id` or
+      :attr:`core.config.Conf.female_role_id`, the message is ignored.
     - The ``actions`` dictionary is loaded once from the JSON file and has the
       following structure:
 
@@ -84,9 +84,9 @@ def roleplay_action(func: Callable):
                     if ((suffix := content[len(keyword):]) and re.fullmatch(r'\w', suffix[0])):
                         continue
 
-                    if author.get_role(Env.male_role_id):
+                    if author.get_role(Conf.male_role_id):
                         gender = 0
-                    elif author.get_role(Env.female_role_id):
+                    elif author.get_role(Conf.female_role_id):
                         gender = 1
                     else:
                         return

@@ -2,7 +2,7 @@ from disnake import ApplicationCommandInteraction
 from disnake.ext.commands import Bot, Cog, Context, MissingRequiredArgument, Param, command, is_owner, slash_command
 from disnake.ext.commands.context import AnyContext
 from cogs.control.commands import command_exec
-from core.env import Env
+from core.config import Conf
 
 
 class Control(Cog):
@@ -10,13 +10,13 @@ class Control(Cog):
         self.bot = bot
 
     @is_owner()
-    @command(name='exec', hidden=True, guild_ids=[Env.guild_id])
+    @command(name='exec', hidden=True, guild_ids=[Conf.guild_id])
     async def command_exec(self, ctx: Context, *, code: str):
         '''Execute python code in the command method'''
         await command_exec(ctx, self, self.bot, code)
 
     @is_owner()
-    @slash_command(name='exec', hidden=True, guild_ids=[Env.guild_id])
+    @slash_command(name='exec', hidden=True, guild_ids=[Conf.guild_id])
     async def slash_command_exec(self, inter: ApplicationCommandInteraction,
         code: str = Param(description='Your python code')):
         '''Execute python code in the command method'''

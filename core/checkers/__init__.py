@@ -1,7 +1,7 @@
 from disnake import Interaction, Message
 from disnake.ext.commands import Context
 from core.errors import NoOwnGuild
-from core.env import Env
+from core.confg import Conf
 from functools import wraps
 from typing import Callable
 
@@ -48,7 +48,7 @@ def own_guild_only(*, silent: bool = False):
         @wraps(func)
         async def wrapper(self, *args, **kwargs):
             if args and isinstance(ctx := args[0], Message | Context | Interaction):
-                if not ctx.guild or ctx.guild.id != Env.guild_id:
+                if not ctx.guild or ctx.guild.id != Conf.guild_id:
                     if silent: return
                     else: raise NoOwnGuild()
             else:
