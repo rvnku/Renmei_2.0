@@ -33,16 +33,26 @@ async def start_playback(client: VoiceClient, players: List[PlayerInfo], guild_i
 
     try:
         source = FFmpegPCMAudio(path, before_options='-re -f s16le -ar 44100 -ac 2')
-    except ClientException as e:
+    except ClientException as exc:
         process.terminate()
         if os.path.exists(path):
             os.unlink(path)
         remove_player(players, guild_id)
-        raise RuntimeError(f"FFmpeg error: {e}")
+        raise RuntimeError(f'FFmpeg error: {exc}')
 
     def after_callback(exc):
         if exc:
-            logger.error(f"Playback error: {exc}")
-        cleanup_player(players, guild_id)
+            logger.error(f'Playback error: {exc}')
+
+        if player_info.process.poll() is None:
+            try:
+                source = FFmpegPCMAudio(path, before_options='-re -f s16le -ar 44100 -ac 2')
+            except ClientException as exc:
+                logger.error(f'FFmpeg error on restart: {exc}')
+                cleanup_player(players, guild_id)
+                return
+            client.play(source, after=after_callback)
+        else:
+            cleanup_player(players, guild_id)
 
     client.play(source, after=after_callback)
