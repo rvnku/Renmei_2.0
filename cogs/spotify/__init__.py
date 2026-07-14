@@ -1,10 +1,10 @@
-from disnake import ApplicationCommandInteraction, Member, VoiceClient, VoiceProtocol
+from disnake import ApplicationCommandInteraction, Event, Member, VoiceClient, VoiceProtocol, VoiceState
 from disnake.ext.commands import Bot, Cog, guild_only, slash_command
 from aiohttp import ClientSession
 from core.api import fetch_token, poll_token
 from core.config import Conf
 from core.env import Env
-from .librespot import start_playback
+from .librespot import start_playback, stop_playback
 from .states import get_player, cleanup_player
 import asyncio, logging
 
@@ -85,6 +85,13 @@ class Spotify(Cog):
             return
 
         await inter.edit_original_response(f'Select {client.user.display_name} as the Spotify Connect Device to start playback')
+
+    @Cog.listener(Event.voice_state_update)
+    async def close_connection(self, member: Member, before: VoiceState, after: VoiceState):
+        if not member.guild or member.bot: return
+        if not isinstance(client := member.guild.voice_client, VoiceClient): return
+        if before.channel != after.channel:
+            await stop_playback(client, self.players, member.guild.id, member.id)
 
 
 def setup(bot: Bot):

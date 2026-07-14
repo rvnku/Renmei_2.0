@@ -10,6 +10,7 @@ class PlayerInfo:
     user_id: int
     process: Popen
     path: str
+    active: bool = True
 
 
 def get_player(players, guild_id: int) -> Optional[PlayerInfo]:
