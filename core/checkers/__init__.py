@@ -1,7 +1,7 @@
 from disnake import Interaction, Message
 from disnake.ext.commands import Context
 from core.errors import NoOwnGuild
-from core.confg import Conf
+from core.config import Conf
 from functools import wraps
 from typing import Callable
 
